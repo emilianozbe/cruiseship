@@ -1,28 +1,42 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
+
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static('.')); // serwuje Twoje pliki HTML, CSS, JS
+app.use(express.static(__dirname));
 
-// SAVE REVIEW
-app.post('/add-opinion', (req, res) => {
-  const newOpinion = req.body;
-
-  // Wczytaj istniejące opinie
-  const data = JSON.parse(fs.readFileSync('opinions.json', 'utf8'));
-
-  // Dodaj nową
-  data.push(newOpinion);
-
-  // Zapisz z powrotem
-  fs.writeFileSync('opinions.json', JSON.stringify(data, null, 2));
-
-  res.json({ status: "ok" });
+// STRONA GŁÓWNA
+// Wyświetla home.html bez zmiany adresu na /home.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'home.html'));
 });
 
-// START SERVER
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// ZAPISYWANIE OPINII
+app.post('/add-opinion', (req, res) => {
+  const newOpinion = req.body;
+  const opinionsPath = path.join(__dirname, 'opinions.json');
+
+  // Wczytaj istniejące opinie
+  const data = JSON.parse(
+    fs.readFileSync(opinionsPath, 'utf8')
+  );
+
+  // Dodaj nową opinię
+  data.push(newOpinion);
+
+  // Zapisz opinie
+  fs.writeFileSync(
+    opinionsPath,
+    JSON.stringify(data, null, 2)
+  );
+
+  res.json({ status: 'ok' });
+});
+
+// URUCHOMIENIE SERWERA
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
