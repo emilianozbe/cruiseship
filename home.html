@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>郵輪</title>
+
+  <!-- STYLE -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <!-- MENU -->
+  <div id="menu"></div>
+
+  <div class="content">
+    <div class="center-wrapper">
+
+      <h1>郵輪</h1>
+
+      <p class="description">
+        歡迎前往郵輪與河輪評價區<br>也歡迎留下你的心得與想法。
+      </p>
+
+      <img src="./images/hero.jpg" alt="hero" class="photo">
+
+      <p>
+        我們是蜜拉士愷<br> 分享郵輪、火車、環遊世界、數位遊牧的生活。出版多本旅遊和散文書籍。
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    // Wczytanie menu
+    fetch('./menu.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('menu').innerHTML = html;
+
+        // aktywacja rozwijanego menu
+        const buttons = document.querySelectorAll('.menu-button');
+        buttons.forEach(button => {
+          button.addEventListener('click', () => {
+            const submenu = button.nextElementSibling;
+            submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+          });
+        });
+      });
+  </script>
+
+</body>
+</html>

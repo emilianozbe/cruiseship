@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>MSC - 所有的評價</title>
+
+  <!-- STYLE -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <!-- MENU -->
+  <div id="menu"></div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- HEADER -->
+    <div class="header-box">
+      <img src="images/msc.jpg" alt="MSC">
+      <h1>MSC - 所有的評價</h1>
+      <a class="add-button" href="add-review.html">添加評價</a>
+    </div>
+
+    <!-- OPINIE -->
+    <div id="reviews"></div>
+
+  </div>
+
+  <script>
+    /* ŁADOWANIE MENU */
+    fetch('./menu.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('menu').innerHTML = html;
+
+        const buttons = document.querySelectorAll('.menu-button');
+        buttons.forEach(button => {
+          button.addEventListener('click', () => {
+            const submenu = button.nextElementSibling;
+            submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+          });
+        });
+      });
+
+    /* ŁADOWANIE OPINII */
+    fetch('opinions.json')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('reviews');
+
+        const filtered = data.filter(opinion => opinion.line === "MSC");
+
+        filtered.forEach(opinion => {
+          const div = document.createElement('div');
+          div.className = 'review';   /* <<< RAMKA JEST TUTAJ */
+
+          div.innerHTML = `
+            <h3>${opinion.title}</h3>
+
+            <div class="review-header">
+              <span>郵輪: ${opinion.ship}</span>
+              <span>搭船日期: ${opinion.date}</span>
+            </div>
+
+            <div class="review-ratings">
+              <div>裝潢: ${"★".repeat(opinion.ratings.decor)}${"☆".repeat(5 - opinion.ratings.decor)}</div>
+              <div>服務: ${"★".repeat(opinion.ratings.service)}${"☆".repeat(5 - opinion.ratings.service)}</div>
+              <div>房間: ${"★".repeat(opinion.ratings.room)}${"☆".repeat(5 - opinion.ratings.room)}</div>
+              <div>食物: ${"★".repeat(opinion.ratings.food)}${"☆".repeat(5 - opinion.ratings.food)}</div>
+            </div>
+
+            <div class="review-section-title">評價:</div>
+            <p class="review-text">${opinion.text}</p>
+
+            <div class="review-author">名字: ${opinion.author}</div>
+          `;
+
+          container.appendChild(div);
+        });
+      });
+  </script>
+
+</body>
+</html>

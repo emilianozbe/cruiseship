@@ -1,0 +1,30 @@
+[
+  {
+    "line": "MSC",
+    "ship": "MSC Fantasia",
+    "date": "2024-08-15",
+    "author": "蜜拉",
+    "title": "很棒的經驗",
+    "text": "巴拉巴拉巴拉",
+    "ratings": {
+      "decor": 5,
+      "room": 4,
+      "service": 5,
+      "food": 4
+    }
+  },
+  {
+    "line": "MSC",
+    "ship": "MSC Bellissima",
+    "date": "2024-09-01",
+    "author": "士愷",
+    "title": "哇！美食船",
+    "text": "好多美食",
+    "ratings": {
+      "decor": 4,
+      "room": 5,
+      "service": 5,
+      "food": 5
+    }
+  }
+]

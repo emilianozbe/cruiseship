@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Review</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+  <!-- SIDEBAR / MENU -->
+  <div id="menu"></div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="form-box">
+      <h1>添加評價</h1>
+
+      <form id="reviewForm">
+
+        <label>標題</label>
+        <input type="text" id="title" required>
+
+        <label>評價</label>
+        <textarea id="text" required></textarea>
+
+        <label>郵輪公司</label>
+            <select id="line" required>
+                <option value="">選擇</option>
+                <option value="MSC">MSC</option>
+                <option value="Costa">Costa</option>
+                <option value="Disney">Disney</option>
+                <option value="河輪">Disney</option>
+            </select>
+
+        <!-- DYNAMIC MENU -->
+        <div id="ship-container" style="display:none;">
+            <label>船</label>
+                 <select id="ship" required></select>
+        </div>
+
+        <label>搭船日期</label>
+        <input type="date" id="date" required>
+
+        <h3>評價</h3>
+
+        <label>裝潢</label>
+        <select id="decor">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+
+        <label>房間</label>
+        <select id="room">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+
+        <label>服務</label>
+        <select id="service">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+
+        <label>食物</label>
+        <select id="food">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+
+        <label>名字</label>
+        <input type="text" id="author" required>
+
+        <button type="submit" class="add-button">保存</button>
+
+      </form>
+    </div>
+
+  </div>
+
+  <!-- LOAD SIDEBAR -->
+  <script>
+    fetch('./menu.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('menu').innerHTML = html;
+
+        const buttons = document.querySelectorAll('.menu-button');
+        buttons.forEach(button => {
+          button.addEventListener('click', () => {
+            const submenu = button.nextElementSibling;
+            submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+          });
+        });
+      });
+  </script>
+
+  <!-- DYNAMIC REVIEW -->
+  <script>
+    document.getElementById("reviewForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const newOpinion = {
+        title: document.getElementById("title").value,
+        text: document.getElementById("text").value,
+        line: document.getElementById("line").value,
+        ship: document.getElementById("ship").value,
+        date: document.getElementById("date").value,
+        ratings: {
+          decor: Number(document.getElementById("decor").value),
+          room: Number(document.getElementById("room").value),
+          service: Number(document.getElementById("service").value),
+          food: Number(document.getElementById("food").value)
+        },
+        author: document.getElementById("author").value
+      };
+
+        fetch('/add-opinion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newOpinion)
+        })
+        .then(res => res.json())
+        .then(data => {
+        const saved = document.getElementById("saved");
+        saved.textContent = "Saved!";
+        saved.classList.add("show");
+
+        setTimeout(() => {
+            saved.classList.remove("show");
+            window.location.href = "msc.html";
+        }, 1800);
+        });
+
+      alert("Your review has been saved!");
+      window.location.href = "msc.html";
+    });
+  </script>
+
+<script>
+const ships = {
+  "MSC": ["MSC Bellissima", "MSC Virtuosa", "MSC Seaside", "MSC World Europa"],
+  "Costa": ["Costa Toscana", "Costa Smeralda", "Costa Deliziosa"],
+  "Disney": ["Disney Dream", "Disney Fantasy", "Disney Wish"],
+  "河輪": ["Disney Dream", "Disney Fantasy", "Disney Wish"],
+};
+
+document.getElementById("line").addEventListener("change", function() {
+  const selectedLine = this.value;
+  const shipContainer = document.getElementById("ship-container");
+  const shipSelect = document.getElementById("ship");
+
+  if (ships[selectedLine]) {
+    shipContainer.style.display = "block";
+    shipSelect.innerHTML = "";
+
+    ships[selectedLine].forEach(ship => {
+      const option = document.createElement("option");
+      option.value = ship;
+      option.textContent = ship;
+      shipSelect.appendChild(option);
+    });
+
+  } else {
+    shipContainer.style.display = "none";
+    shipSelect.innerHTML = "";
+  }
+});
+</script>
+
+<div id="saved" class="saved">謝謝！</div>
+
+</body>
+</html>
